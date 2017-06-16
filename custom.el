@@ -73,7 +73,6 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
-
 ;; OSX
 (let ((is-mac (string-equal system-type "darwin")))
   (when is-mac
@@ -87,17 +86,12 @@
     (setq mac-option-modifier 'meta) ;; Bind meta to ALT
 ))
 
-;; Not going to use these commands
-(put 'ns-print-buffer 'disabled t)
-(put 'suspend-frame 'disabled t)
-
 ;; line wrap
 (setq line-move-visual t)
 
 ;; spaces
 (setq-default indent-tabs-mode nil)
-(setq-default default-tab-width 2)
-(setq-default indicate-empty-lines nil)
+(setq-default tab-width 2)
 
 ;; disable ui tools
 (menu-bar-mode -1)
@@ -292,6 +286,7 @@
   (setq persp-autokill-buffer-on-remove 'kill-weak)
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
   )
+
 ;; Projectile
 (use-package projectile
   :ensure t
@@ -456,5 +451,6 @@
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server."
   (interactive)
+  (save-some-buffers)
   (kill-emacs)
   )
