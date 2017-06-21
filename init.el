@@ -19,7 +19,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yasnippet yaml-mode window-numbering web-mode web virtualenvwrapper use-package tide tern smex smart-mode-line sane-term rainbow-mode rainbow-delimiters persp-mode nlinum multiple-cursors multi-term material-theme markdown-mode magit json-mode ido-vertical-mode ido-ubiquitous ido-clever-match helm-projectile helm-ls-git helm-git-files helm-ag go-guru go-eldoc go general fzf flx-ido find-file-in-repository find-file-in-project evil-surround evil-commentary doom-themes desktop+ dash-functional cyberpunk-theme counsel-projectile company-web company-go)))
+    (dumb-jump persp-mode-projectile-bridge-mode persp-mode-projectile-bridge eyebrowse workgroups2 persp-projectile perspeen perspective workgroups exec-path-from-shell lispy rainbow-delimiters-mode parinfer smartparens evil-paredit paredit cider yasnippet yaml-mode window-numbering web-mode web virtualenvwrapper use-package tide tern smex smart-mode-line sane-term rainbow-mode rainbow-delimiters persp-mode nlinum multiple-cursors multi-term material-theme markdown-mode magit json-mode ido-vertical-mode ido-ubiquitous ido-clever-match helm-projectile helm-ls-git helm-git-files helm-ag go-guru go-eldoc go general fzf flx-ido find-file-in-repository find-file-in-project evil-surround evil-commentary doom-themes desktop+ dash-functional cyberpunk-theme counsel-projectile company-web company-go)))
  '(safe-local-variable-values (quote ((default-tab-width . 4)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
