@@ -1,12 +1,9 @@
-;;; Code:
 (setq-default use-package-always-ensure t)
 
-;; PATH from shell
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
-
 ;; DEFAULTS OPTIONS
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq visible-bell nil)
@@ -29,11 +26,10 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-; Disable start-up screen
 (setq inhibit-startup-screen t
-  inhibit-splash-screen t
-  inhibit-startup-message t
-  initial-scratch-message "")
+      inhibit-splash-screen t
+      inhibit-startup-message t
+      initial-scratch-message "")
 
 ;; utf-8
 (setq locale-coding-system 'utf-8)
@@ -63,7 +59,7 @@
 ;; show absolute path of file on frame title
 (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
-        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+            '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
 ;; OSX
 (let ((is-mac (string-equal system-type "darwin")))
@@ -92,14 +88,14 @@
 
 ;; FUNCTIONS
 (defun goto-init.el ()
-    "Open init.el file."
-    (interactive)
-    (find-file "~/.emacs.d/init.el"))
+  "Open init.el file."
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
 
 (defun goto-custom.el ()
-    "Open custom.el file."
-    (interactive)
-    (find-file "~/.emacs.d/custom.el"))
+  "Open custom.el file."
+  (interactive)
+  (find-file "~/.emacs.d/custom.el"))
 
 (defun xah-user-buffer-q ()
   "List buffer that create by user (buffer that doesn't have *)."
@@ -119,8 +115,8 @@
     (while (< i 20)
       (if (or (not (member (current-buffer) current-project-buffers)) (not (xah-user-buffer-q)))
           (progn
-                 (funcall direction)
-                 (setq i (1+ i)))
+            (funcall direction)
+            (setq i (1+ i)))
         (progn (setq i 100))))))
 
 (defun switch-to-previous-buffer ()
@@ -128,16 +124,14 @@
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-
 ;; DEFAULT KEYS
 (global-set-key (kbd "M-`") 'switch-to-previous-buffer)
-(global-set-key (kbd "C-`") 'ace-window)
+(global-set-key (kbd "C-`") 'other-frame)
 (global-set-key [f1] 'help-command)
 (global-set-key [f1 f1] 'help-for-help)
 (global-set-key [kp-f1] 'help-command)
 (global-set-key [kp-f1 kp-f1] 'help-for-help)
 (global-set-key [ ?\C-h ] 'delete-backward-char)
-
 
 ;; PACKAGES
 
@@ -146,8 +140,8 @@
   (general-evil-setup t)
 
   (general-define-key
-    :states '(normal)
-    "M-." (general-simulate-keys "\\ M-."))
+   :states '(normal)
+   "M-." (general-simulate-keys "\\ M-."))
 
   (general-define-key
    :states '(normal visual)
@@ -164,7 +158,22 @@
   :config
   (setq-default nlinum-format "%4d ")
   (setq line-number-display-limit-width 10000)
-  (global-nlinum-mode))
+  (global-nlinum-mode)
+  (add-hook 'term-mode-hook (lambda () (nlinum-mode -1)))
+  (add-hook 'shell-mode-hook (lambda () (nlinum-mode -1)))
+  (add-hook 'eshell-mode-hook (lambda () (nlinum-mode -1)))
+  (add-hook 'helm-mode-hook (lambda () (nlinum-mode -1))))
+
+(add-hook 'prog-mode-hook (lambda ()
+                            (when (not (derived-mode-p
+                                        'lisp-mode
+                                        'clojure-mode
+                                        'emacs-lisp-mode
+                                        'common-lisp-mode
+                                        'scheme-mode))
+                              (setq-local electric-pair-pairs '((?\' . ?\'))))
+                            (electric-pair-mode)))
+
 
 ;;theme
 (use-package doom-themes
@@ -176,16 +185,18 @@
                   (load-theme 'doom-one t)))
     (load-theme 'doom-one t)))
 
+(use-package shell-pop)
+
 ;; tab/spaces
 (use-package whitespace
   :config
   (setq whitespace-style '(tabs newline space-mark
-                           tab-mark newline-mark
-                           face lines-tail))
+                                tab-mark newline-mark
+                                face lines-tail))
   (setq whitespace-display-mappings
-            '((space-mark nil)
-              (newline-mark nil)
-              (tab-mark 9 [124 9] [92 9])))
+        '((space-mark nil)
+          (newline-mark nil)
+          (tab-mark 9 [124 9] [92 9])))
   (global-whitespace-mode 1)
   :diminish global-whitespace-mode)
 
@@ -212,18 +223,18 @@
   :config (evil-surround-mode t))
 
 (defun my/evil-shift-left-visual ()
-    "Move selected block to left."
-    (interactive)
-    (evil-shift-left (region-beginning) (region-end))
-    (evil-normal-state)
-    (evil-visual-restore))
+  "Move selected block to left."
+  (interactive)
+  (evil-shift-left (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
 
 (defun my/evil-shift-right-visual ()
-    "Move selected block to right."
-    (interactive)
-    (evil-shift-right (region-beginning) (region-end))
-    (evil-normal-state)
-    (evil-visual-restore))
+  "Move selected block to right."
+  (interactive)
+  (evil-shift-right (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
 
 
 ;; ivy
@@ -258,19 +269,22 @@
   :diminish company-mode
   :defer 2
   :bind (:map company-active-map
-         ("<backtab>" . company-select-previous)
-         ("TAB" . company-complete-common-or-cycle)
-         ("<tab>" . company-complete-common-or-cycle)
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
+              ("<backtab>" . company-select-previous)
+              ("TAB" . company-complete-common-or-cycle)
+              ("<tab>" . company-complete-common-or-cycle)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous))
   :config
   (progn
     (setq company-global-modes '(not eshell-mode comint-mode erc-mode rcirc-mode))
-    (setq company-idle-delay 0.3
-          company-echo-delay 0
-          company-tooltip-limit 20
-          company-dabbrev-ignore-case t
-          company-minimum-prefix-length 3)
+    (setq company-idle-delay 0.1
+          company-selection-wrap-around t
+          company-tooltip-limit 20)
+    (setq company-ddabbrev-code-everywhere t)
+    (setq company-dabbrev-code-modes t)
+    (setq company-dabbrev-code-other-buffers 'all)
+    (setq company-dabbrev-ignore-buffers "\\`\\'")
+    (setq company-transformers '(company-sort-by-occurrence))
     (custom-set-faces
      '(company-tooltip-common
        ((t (:inherit company-tooltip :weight bold :underline nil))))
@@ -312,6 +326,12 @@
 ;; show window number
 (use-package window-numbering
   :config (window-numbering-mode))
+
+(use-package restclient)
+
+;; (use-package aggressive-indent
+;;     :config
+;;     (add-hook 'prog-mode-hook 'aggressive-indent-mode))
 
 ;; Robot Framework
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . robot-mode))
@@ -372,30 +392,13 @@
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode-for-html))
     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode-for-html))
     (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode-for-js))
-    (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode-for-js))
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode-for-tsx))))
+    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode-for-tsx))
+    (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode-for-js))))
 
 ;; Clojure
 (use-package cider
   :config
   (add-hook 'clojure-mode-hook 'cider-mode))
-
-(use-package parinfer
-  :bind
-  (("C-," . parinfer-toggle-mode))
-  :init
-  (progn
-    (setq parinfer-extensions
-          '(defaults
-             evil
-             paredit
-             smart-tab
-             smart-yank))
-    (add-hook 'clojure-mode-hook #'parinfer-mode)
-    (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'common-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'scheme-mode-hook #'parinfer-mode)
-    (add-hook 'lisp-mode-hook #'parinfer-mode)))
 
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server."
